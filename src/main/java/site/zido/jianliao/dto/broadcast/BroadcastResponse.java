@@ -9,5 +9,17 @@ package site.zido.jianliao.dto.broadcast;
  * @version 1.0.0
  */
 public class BroadcastResponse {
+    public String message;
 
+    public BroadcastResponse(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

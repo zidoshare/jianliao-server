@@ -3,8 +3,8 @@ package site.zido.jianliao.tools.testToolbox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import site.zido.cydServer.common.tools.RandomTool;
-import site.zido.cydServer.common.tools.StringTool;
+import site.zido.jianliao.tools.RandomTool;
+import site.zido.jianliao.tools.StringTool;
 
 import javax.annotation.Resource;
 import javax.persistence.Column;
