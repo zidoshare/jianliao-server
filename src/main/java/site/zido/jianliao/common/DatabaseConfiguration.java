@@ -14,6 +14,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.List;
  */
 @Configuration
 @ConfigurationProperties(prefix = "spring.datasource.druid")
+@EnableTransactionManagement
 public class DatabaseConfiguration{
     private String loginUserName;
     private String loginPassword;

@@ -4,7 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import site.zido.jianliao.tools.RandomTool;
-import site.zido.jianliao.tools.StringTool;
+import site.zido.jianliao.tools.utils.toolbox.CollectionUtil;
+import site.zido.jianliao.tools.utils.toolbox.StringUtil;
 
 import javax.annotation.Resource;
 import javax.persistence.Column;
@@ -13,13 +14,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 用于测试的工具类.
- *
+ * <p>
  * 生成数据方法支持所有基本类型的包装类型以及Date类型
  * Date: 2017/3/22 0022
  * Time: 2:44
@@ -31,29 +30,31 @@ import java.util.List;
 public class TestTool {
     private static Logger logger = LoggerFactory.getLogger(TestTool.class);
     @Resource
-    private StringTool stringTool;
-    @Resource
     private RandomTool randomTool;
 
     /**
      * 自动向实体类注入模拟值
+     * 以这种方式执行的代码,会自动跳过有值的属性
+     *
      * @param entities 实体类
-     * @param <T> 类型
+     * @param <T>      类型
      */
-    public <T> void generateEntities(T... entities) {
+    public <T> List<T> generateEntities(T... entities) {
         for (T entity : entities) {
             generate(entity);
         }
+        return CollectionUtil.newArrayList(entities);
     }
 
     /**
      * 通过类型和长度生成模拟实体集合
+     *
      * @param _class 类型
      * @param length 长度
-     * @param <T> 类型
+     * @param <T>    类型
      * @return 模拟实体集合
      */
-    public <T> List<T> generateEntities(Class<T> _class,int length) {
+    public <T> List<T> generateEntities(Class<T> _class, int length) {
         List<T> list = new ArrayList<>();
         for (int i = 0; i < length; i++) {
             list.add(generate(_class));
@@ -63,8 +64,9 @@ public class TestTool {
 
     /**
      * 根据类型生成一个已注入模拟值的实体类
+     *
      * @param _class 类型集合
-     * @param <T> 类型
+     * @param <T>    类型
      * @return 实体类
      */
     public <T> T generate(Class<T> _class) {
@@ -86,21 +88,40 @@ public class TestTool {
 
     /**
      * 自动注入模拟值
+     * 以这种方式执行的代码,会自动跳过有值的属性
+     *
      * @param entity 实体类
-     * @param <T> 类型
+     * @param <T>    类型
      */
-    public <T> void generate(T entity) {
+    public <T> T generate(T entity) {
         final Field[] fields = entity.getClass().getDeclaredFields();
         for (Field field : fields) {
+            try {
+                final String name = StringUtil.firstCharToUpperCase(field.getName());
+                final Method method = entity.getClass().getMethod("get" + name);
+                Object value = method.invoke(entity);
+                if (value != null)
+                    continue;
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                logger.error(field.getName() + "值必须有get方法");
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                logger.error(field.getName() + "get方法执行出错");
+                e.printStackTrace();
+            }
             injectValue(entity, field);
         }
+        return entity;
     }
 
     /**
      * 向实体注入值
+     *
      * @param entity 实体的实例
-     * @param field 属性
-     * @param <T> 类型
+     * @param field  属性
+     * @param <T>    类型
      */
     private <T> void injectValue(T entity, Field field) {
         final Class<?> _class = entity.getClass();
@@ -122,7 +143,7 @@ public class TestTool {
             final String s = randomTool.randomString(length, true);
 
             try {
-                final String name = stringTool.captureName(field.getName());
+                final String name = StringUtil.firstCharToUpperCase(field.getName());
                 final Method method = _class.getMethod("set" + name, String.class);
                 method.invoke(entity, s);
             } catch (NoSuchMethodException e) {
@@ -136,7 +157,7 @@ public class TestTool {
         }
         if (type == Date.class) {
             try {
-                final String name = stringTool.captureName(field.getName());
+                final String name = StringUtil.firstCharToUpperCase(field.getName());
                 final Method method = _class.getMethod("set" + name, Date.class);
                 method.invoke(entity, new Date());
             } catch (NoSuchMethodException e) {
@@ -157,8 +178,8 @@ public class TestTool {
         }
         try {
             Constructor<?> constructor = field.getType().getConstructor(String.class);
-            final String name = stringTool.captureName(field.getName());
-            final Method method = _class.getMethod("set" + name,field.getType());
+            final String name = StringUtil.firstCharToUpperCase(field.getName());
+            final Method method = _class.getMethod("set" + name, field.getType());
             method.invoke(entity, constructor.newInstance(randomTool.randomInt(length, true) + ""));
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             logger.error("---------------属性名为" + field.getName() + "的类型不支持-----------------");

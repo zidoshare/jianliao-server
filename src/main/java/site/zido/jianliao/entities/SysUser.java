@@ -15,17 +15,28 @@ import java.util.List;
  * Date: 2017/3/22 0022
  * Time: 19:37
  *
- * @author <a href="http://zido.site">wuhongxu</a>.
+ * @author <a href="http://zido.site">zido</a>.
  * @version 1.0.0
  */
 @Entity
 public class SysUser implements UserDetails{
     @Id
     @GeneratedValue
+    //id
     private Long id;
+    //username account
     private String username;
+    //nickname show
+    private String nickname;
+    //password
     private String password;
-    @ManyToMany
+    //sex 0-secrecy,1-male,2-female
+    private Integer sex;
+    //person sign
+    private String sign;
+    //avatar url
+    private String imageUrl;
+    @ManyToMany(fetch=FetchType.EAGER)
     @NoInjectValue
     private List<SysRole> roles;
     @Column(nullable = false)
@@ -148,6 +159,42 @@ public class SysUser implements UserDetails{
 
     public SysUser setEnable(Integer enable) {
         this.enable = enable;
+        return this;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public SysUser setSex(Integer sex) {
+        this.sex = sex;
+        return this;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public SysUser setSign(String sign) {
+        this.sign = sign;
+        return this;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public SysUser setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+        return this;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public SysUser setNickname(String nickname) {
+        this.nickname = nickname;
         return this;
     }
 }
