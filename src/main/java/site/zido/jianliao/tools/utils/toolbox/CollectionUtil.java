@@ -13,6 +13,7 @@ import java.util.Map.Entry;
  * @version 1.0.0
  */
 public class CollectionUtil {
+    public static Integer MAX_SIZE = Integer.MAX_VALUE;
 
     private CollectionUtil() {
         // 静态类不可实例化

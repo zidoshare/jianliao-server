@@ -35,13 +35,15 @@ public class SysUser implements UserDetails{
     //person sign
     private String sign;
     //avatar url
-    private String imageUrl;
-    @ManyToMany(fetch=FetchType.EAGER)
+    private String imageUrl = "./images/avatar.gif";
+    @ManyToMany(fetch=FetchType.EAGER) //即时查询,因为马上需要权限条件
     @NoInjectValue
     private List<SysRole> roles;
     @Column(nullable = false)
     @NoInjectValue
     private Integer enable = 1;
+
+    private String skin = "./images/bg0.jpg";
 
     /**
      * Returns the authorities granted to the user. Cannot return <code>null</code>.
@@ -195,6 +197,15 @@ public class SysUser implements UserDetails{
 
     public SysUser setNickname(String nickname) {
         this.nickname = nickname;
+        return this;
+    }
+
+    public String getSkin() {
+        return skin;
+    }
+
+    public SysUser setSkin(String skin) {
+        this.skin = skin;
         return this;
     }
 }

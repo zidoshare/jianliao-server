@@ -49,12 +49,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable().exceptionHandling().authenticationEntryPoint(entryPoint)
                 .and()
                 .authorizeRequests()
+//                .anyRequest().authenticated()
                 //admin/superAdmin可访问
-                .antMatchers(HttpMethod.POST,"/api/admin/**").hasAnyRole("管理员", "超级管理员")
+                .antMatchers("api/admin/**").hasAnyRole("管理员", "超级管理员")
                 //superAdmin可访问
-                .antMatchers(HttpMethod.POST,"/api/superAdmin/**").hasRole("管理员")
+                .antMatchers("api/superAdmin/**").hasRole("管理员")
                 //user/superAdmin/admin可访问
-                .antMatchers(HttpMethod.POST,"/api/user/**").hasAnyRole("用户", "管理员", "超级管理员")
+                .antMatchers("api/user/**").hasAnyRole("用户", "管理员", "超级管理员")
                 //其他均可匿名访问
                 .anyRequest().permitAll()
                 .and()

@@ -19,7 +19,13 @@ import site.zido.jianliao.entities.SysUser;
 public class LoggedInChecker {
     public SysUser getLoggedInUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null) return (SysUser) authentication.getPrincipal();
-        return null;
+        SysUser user = null;
+        if(authentication != null){
+            Object principal = authentication.getPrincipal();
+            if(principal instanceof SysUser){
+                user = (SysUser) principal;
+            }
+        }
+        return user;
     }
 }

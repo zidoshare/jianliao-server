@@ -6,9 +6,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import site.zido.jianliao.common.security.LoggedInChecker;
+import site.zido.jianliao.dto.AjaxResult;
 import site.zido.jianliao.entities.SysUser;
 
 import javax.annotation.Resource;
@@ -24,12 +26,16 @@ import java.security.Principal;
  * @version 1.0.0
  */
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(value = "/api/user",method = RequestMethod.POST)
 public class AuthController extends BaseController {
     @Resource
     private LoggedInChecker checker;
     @RequestMapping("/now")
-    public SysUser getUser(){
-        return checker.getLoggedInUser();
+    public AjaxResult getUser(){
+        SysUser user = checker.getLoggedInUser();
+        if(user == null)
+            return fail("未获取到用户数据");
+        user.setPassword("************");
+        return successData(user);
     }
 }
