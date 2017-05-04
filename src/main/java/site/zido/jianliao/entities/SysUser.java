@@ -31,9 +31,9 @@ public class SysUser implements UserDetails{
     //password
     private String password;
     //sex 0-secrecy,1-male,2-female
-    private Integer sex;
+    private Integer sex = 1;
     //person sign
-    private String sign;
+    private String sign = "加入简聊的新成员";
     //avatar url
     private String imageUrl = "./images/avatar.gif";
     @ManyToMany(fetch=FetchType.EAGER) //即时查询,因为马上需要权限条件

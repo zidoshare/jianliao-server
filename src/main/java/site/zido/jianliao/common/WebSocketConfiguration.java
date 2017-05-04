@@ -33,10 +33,10 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        //register two endpoint named "/broadcast" and "/queue" and use SockJs protocol
+        //register two endpoint named "/broadcast" and "/chat" and use SockJs protocol
         //broadcast : public endpoint
         //queue : point to point
-        registry.addEndpoint("/broadcast","/chat")
+        registry.addEndpoint("/chat")
                 .setAllowedOrigins("*")
                 .withSockJS();
     }
@@ -46,7 +46,7 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic","/queue");
+        registry.enableSimpleBroker("/queue");
         //the address prefix of subscribing and the default option is '/user/' if there is not configuration
         registry.setUserDestinationPrefix("/user/");
         //set the global subscribe address

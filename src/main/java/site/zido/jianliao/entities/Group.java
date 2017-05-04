@@ -19,10 +19,10 @@ public class Group {
     @GeneratedValue
     private Long Id;
     private String name = "我的好友"; //姓名
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @NoInjectValue
     private SysUser originUser; //所属用户
-    @OneToMany
+    @ManyToMany
     @NoInjectValue
     private List<SysUser> users; //用户
 

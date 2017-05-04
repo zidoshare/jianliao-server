@@ -1,8 +1,11 @@
 package site.zido.jianliao.web;
 
 
+import site.zido.jianliao.common.security.LoggedInChecker;
 import site.zido.jianliao.dto.AjaxResult;
+import site.zido.jianliao.entities.SysUser;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +19,11 @@ import java.util.Map;
  * @version 1.0.0
  */
 public class BaseController {
+    @Resource
+    private LoggedInChecker checker;
+    protected SysUser getCurrentUser(){
+        return checker.getLoggedInUser();
+    }
 /* ============================     ajax    =================================================  */
 
     /**

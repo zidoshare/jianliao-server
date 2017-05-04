@@ -1,6 +1,7 @@
 package site.zido.jianliao.common.security;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.Http401AuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -37,8 +38,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Resource
     private AuthFailureHandler failureHandler;
     @Resource
-    private HttpAuthenticationEntryPoint entryPoint;
-    @Resource
     private AuthSuccessHandler successHandler;
     @Resource
     private HttpLogoutSuccessHandler logoutSuccessHandler;
@@ -46,7 +45,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 //        if (profile != null && Objects.equals(profile, "dev"))
 //            http.csrf().disable(); //开发模式下禁用csrf
-        http.csrf().disable().exceptionHandling().authenticationEntryPoint(entryPoint)
+        http.csrf().disable().exceptionHandling().authenticationEntryPoint(new Http401AuthenticationEntryPoint("账户名或密码错误"))
                 .and()
                 .authorizeRequests()
 //                .anyRequest().authenticated()

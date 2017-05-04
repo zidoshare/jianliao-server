@@ -3,6 +3,8 @@ package site.zido.jianliao.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import site.zido.jianliao.entities.SysRole;
 
+import javax.management.relation.Role;
+
 /**
  * cyd.
  * Date: 2017/3/23 0023
@@ -12,4 +14,5 @@ import site.zido.jianliao.entities.SysRole;
  * @version 1.0.0
  */
 public interface RoleRepository extends JpaRepository<SysRole,Long> {
+    public SysRole findByName(String name);
 }

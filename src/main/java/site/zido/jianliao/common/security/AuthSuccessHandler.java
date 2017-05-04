@@ -1,5 +1,6 @@
 package site.zido.jianliao.common.security;
 
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import site.zido.jianliao.dto.AjaxResult;
 import site.zido.jianliao.entities.SysUser;
 
 import javax.servlet.ServletException;
@@ -42,7 +44,6 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
         response.setStatus(HttpServletResponse.SC_OK);
 
         SysUser user = (SysUser) authentication.getPrincipal();
-
         LOGGER.info(user.getUsername() + " got is connected ");
         // 在servlet中输出中文，如果采用PrintWriter方式，
         // 需要在调用getPrintWriter()之前调用setContentType 或者 setCharacterEncoding；
@@ -50,9 +51,8 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/json; charset=utf-8");
         PrintWriter writer = response.getWriter();
-
         //登录成功
-        mapper.writeValue(writer, user);
+        mapper.writeValue(writer, new AjaxResult(true,"登录成功"));
         writer.flush();
     }
 }
