@@ -1,5 +1,6 @@
 package site.zido.jianliao.entities;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +22,8 @@ import java.util.List;
 @Entity
 public class SysUser implements UserDetails{
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "myIdStrategy")
+    @GenericGenerator(name = "myIdStrategy", strategy = "site.zido.jianliao.common.TimeId")
     //id
     private Long id;
     //username account

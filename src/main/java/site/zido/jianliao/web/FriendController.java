@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import site.zido.jianliao.common.security.LoggedInChecker;
 import site.zido.jianliao.dto.AjaxResult;
-import site.zido.jianliao.entities.Group;
+import site.zido.jianliao.entities.UserGroup;
 import site.zido.jianliao.entities.SysUser;
 import site.zido.jianliao.repository.GroupRepository;
 
@@ -30,7 +30,7 @@ public class FriendController extends BaseController{
     @RequestMapping("/index")
     public AjaxResult index(){
         SysUser user = checker.getLoggedInUser();
-        List<Group> groups = groupRepository.findAllByOriginUser(user);
-        return successData(groups);
+        List<UserGroup> userGroups = groupRepository.findAllByOriginUser(user);
+        return successData(userGroups);
     }
 }

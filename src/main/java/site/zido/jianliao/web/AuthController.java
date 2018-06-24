@@ -1,19 +1,10 @@
 package site.zido.jianliao.web;
 
-import com.google.common.collect.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.WebAttributes;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import site.zido.jianliao.common.security.LoggedInChecker;
 import site.zido.jianliao.dto.AjaxResult;
 import site.zido.jianliao.dto.WsMessage;
-import site.zido.jianliao.entities.Group;
+import site.zido.jianliao.entities.UserGroup;
 import site.zido.jianliao.entities.SysUser;
 import site.zido.jianliao.repository.GroupRepository;
 import site.zido.jianliao.repository.UserRepository;
@@ -21,10 +12,7 @@ import site.zido.jianliao.tools.utils.toolbox.CollectionUtil;
 import site.zido.jianliao.tools.utils.toolbox.StringUtil;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,10 +48,10 @@ public class AuthController extends BaseController {
     @RequestMapping("/online")
     public AjaxResult online(@RequestParam(defaultValue = "1") int mode){
         SysUser user = getCurrentUser();
-        List<Group> groups = groupRepository.findAllByOriginUser(user);
+        List<UserGroup> userGroups = groupRepository.findAllByOriginUser(user);
         List<SysUser> friends = new ArrayList<>();
-        for (Group group : groups) {
-            friends.addAll(group.getUsers());
+        for (UserGroup userGroup : userGroups) {
+            friends.addAll(userGroup.getUsers());
         }
         WsMessage message = new WsMessage()
                 .setMessage(user.getUsername())
@@ -98,9 +86,9 @@ public class AuthController extends BaseController {
         userRepository.save(currentUser);
         WsMessage message = new WsMessage().setType("friend_update");
         if(!StringUtil.isAllBlank(nickname,sign)){
-            List<Group> groups = groupRepository.findAllByOriginUser(getCurrentUser());
-            for (Group group : groups) {
-                List<SysUser> users = group.getUsers();
+            List<UserGroup> userGroups = groupRepository.findAllByOriginUser(getCurrentUser());
+            for (UserGroup userGroup : userGroups) {
+                List<SysUser> users = userGroup.getUsers();
 
                 for (SysUser user : users) {
                     simpMessageSendingOperations.convertAndSendToUser(user.getUsername(),"/queue/greetings",message);
@@ -131,22 +119,22 @@ public class AuthController extends BaseController {
             return fail("添加失败,未找到该用户");
         SysUser currentUser = getCurrentUser();
         WsMessage message = new WsMessage().setFromUser(currentUser.getUsername()).setType(WsMessage.TYPE_ADD_USER);
-        List<Group> groups = groupRepository.findAllByOriginUser(currentUser);
-        Group group = null;
-        for (Group g : groups) {
+        List<UserGroup> userGroups = groupRepository.findAllByOriginUser(currentUser);
+        UserGroup userGroup = null;
+        for (UserGroup g : userGroups) {
             if(Objects.equals(g.getName(), groupName)){
-                 group = g;
+                 userGroup = g;
                  break;
             }
         }
-        if(group == null){
-            group = new Group().setName(groupName).setOriginUser(currentUser);
-            groupRepository.save(group);
+        if(userGroup == null){
+            userGroup = new UserGroup().setName(groupName).setOriginUser(currentUser);
+            groupRepository.save(userGroup);
         }
         for (SysUser user : users) {
             if(Objects.equals(user.getId(), currentUser.getId()))
                 return fail("你不能添加自己为好友");
-            for (Group g : groups) {
+            for (UserGroup g : userGroups) {
                 List<SysUser> friends = g.getUsers();
                 for (SysUser friend : friends) {
                     if(friend.getId().equals(user.getId())){
@@ -154,22 +142,22 @@ public class AuthController extends BaseController {
                     }
                 }
             }
-            List<Group> friendGroups = groupRepository.findAllByOriginUser(user);
-            if(CollectionUtil.isEmpty(friendGroups)){
-                friendGroups.add(new Group().setName("我的好友").setOriginUser(user));
-                groupRepository.save(friendGroups);
+            List<UserGroup> friendUserGroups = groupRepository.findAllByOriginUser(user);
+            if(CollectionUtil.isEmpty(friendUserGroups)){
+                friendUserGroups.add(new UserGroup().setName("我的好友").setOriginUser(user));
+                groupRepository.save(friendUserGroups);
             }
-            Group friendGroup = friendGroups.get(0);
-            friendGroup.getUsers().add(currentUser);
-            groupRepository.save(friendGroup);
+            UserGroup friendUserGroup = friendUserGroups.get(0);
+            friendUserGroup.getUsers().add(currentUser);
+            groupRepository.save(friendUserGroup);
             simpMessageSendingOperations.convertAndSendToUser(user.getUsername(),"/queue/greetings",message);
         }
-        List<SysUser> friends = group.getUsers();
+        List<SysUser> friends = userGroup.getUsers();
         if(friends == null)
             friends = new ArrayList<>();
         friends.addAll(users);
-        group.setUsers(friends);
-        groupRepository.save(group);
+        userGroup.setUsers(friends);
+        groupRepository.save(userGroup);
         return success("添加成功");
     }
 }

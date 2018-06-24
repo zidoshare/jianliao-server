@@ -1,7 +1,7 @@
 package site.zido.jianliao.common;
 
 import org.springframework.context.annotation.Configuration;
-import site.zido.jianliao.entities.Group;
+import site.zido.jianliao.entities.UserGroup;
 import site.zido.jianliao.entities.SysRole;
 import site.zido.jianliao.entities.SysUser;
 import site.zido.jianliao.repository.GroupRepository;
@@ -48,20 +48,20 @@ public class InitialConfiguration {
                 new SysUser().setUsername("fff").setPassword("fff").setRoles(CollectionUtil.newArrayList(roles.get(2))),
                 new SysUser().setUsername("ccc").setPassword("ccc").setRoles(CollectionUtil.newArrayList(roles.get(2))));
         userRepository.save(users);
-        List<Group> groups = testTool.generateEntities(
-                new Group().setName("我的好友").setOriginUser(users.get(0)).setUsers(CollectionUtil.sub(users, 1, 2)),
-                new Group().setName("我的同学").setOriginUser(users.get(0)).setUsers(CollectionUtil.sub(users, 2, 3)),
-                new Group().setName("公司").setOriginUser(users.get(0)).setUsers(CollectionUtil.sub(users, 3, 4)),
-                new Group().setName("软件开发").setOriginUser(users.get(0)).setUsers(CollectionUtil.sub(users, 4, 5)),
-                new Group().setName("维修核潜艇").setOriginUser(users.get(0)).setUsers(CollectionUtil.sub(users, 5, CollectionUtil.MAX_SIZE)),
-                new Group().setName("核弹头抛光").setOriginUser(users.get(1)).setUsers(CollectionUtil.sub(users, 0, 1)),
-                new Group().setName("航母上蜡").setOriginUser(users.get(1)).setUsers(CollectionUtil.sub(users, 2, 4)),
-                new Group().setName("维修核潜艇").setOriginUser(users.get(1)).setUsers(CollectionUtil.sub(users, 4, CollectionUtil.MAX_SIZE)),
-                new Group().setName("我的好友").setOriginUser(users.get(2)).setUsers(CollectionUtil.sub(users, 0, 2)),
-                new Group().setName("我的好友").setOriginUser(users.get(3)).setUsers(CollectionUtil.sub(users, 0, 2)),
-                new Group().setName("我的好友").setOriginUser(users.get(4)).setUsers(CollectionUtil.sub(users, 0, 2)),
-                new Group().setName("我的好友").setOriginUser(users.get(5)).setUsers(CollectionUtil.sub(users, 0, 2))
+        List<UserGroup> userGroups = testTool.generateEntities(
+                new UserGroup().setName("我的好友").setOriginUser(users.get(0)).setUsers(CollectionUtil.sub(users, 1, 2)),
+                new UserGroup().setName("我的同学").setOriginUser(users.get(0)).setUsers(CollectionUtil.sub(users, 2, 3)),
+                new UserGroup().setName("公司").setOriginUser(users.get(0)).setUsers(CollectionUtil.sub(users, 3, 4)),
+                new UserGroup().setName("软件开发").setOriginUser(users.get(0)).setUsers(CollectionUtil.sub(users, 4, 5)),
+                new UserGroup().setName("维修核潜艇").setOriginUser(users.get(0)).setUsers(CollectionUtil.sub(users, 5, CollectionUtil.MAX_SIZE)),
+                new UserGroup().setName("核弹头抛光").setOriginUser(users.get(1)).setUsers(CollectionUtil.sub(users, 0, 1)),
+                new UserGroup().setName("航母上蜡").setOriginUser(users.get(1)).setUsers(CollectionUtil.sub(users, 2, 4)),
+                new UserGroup().setName("维修核潜艇").setOriginUser(users.get(1)).setUsers(CollectionUtil.sub(users, 4, CollectionUtil.MAX_SIZE)),
+                new UserGroup().setName("我的好友").setOriginUser(users.get(2)).setUsers(CollectionUtil.sub(users, 0, 2)),
+                new UserGroup().setName("我的好友").setOriginUser(users.get(3)).setUsers(CollectionUtil.sub(users, 0, 2)),
+                new UserGroup().setName("我的好友").setOriginUser(users.get(4)).setUsers(CollectionUtil.sub(users, 0, 2)),
+                new UserGroup().setName("我的好友").setOriginUser(users.get(5)).setUsers(CollectionUtil.sub(users, 0, 2))
                 );
-        groupRepository.save(groups);
+        groupRepository.save(userGroups);
     }
 }

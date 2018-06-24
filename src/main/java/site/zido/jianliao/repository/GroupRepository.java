@@ -1,7 +1,7 @@
 package site.zido.jianliao.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import site.zido.jianliao.entities.Group;
+import site.zido.jianliao.entities.UserGroup;
 import site.zido.jianliao.entities.SysUser;
 
 import java.util.List;
@@ -14,6 +14,6 @@ import java.util.List;
  * @author <a href="zido.site">zido</a>
  * @version 1.0.0
  */
-public interface GroupRepository extends JpaRepository<Group,Long>{
-    public List<Group> findAllByOriginUser(SysUser user);
+public interface GroupRepository extends JpaRepository<UserGroup,Long>{
+    public List<UserGroup> findAllByOriginUser(SysUser user);
 }

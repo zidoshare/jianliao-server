@@ -1,5 +1,6 @@
 package site.zido.jianliao.entities;
 
+import org.hibernate.annotations.GenericGenerator;
 import site.zido.jianliao.tools.testToolbox.NoInjectValue;
 
 import javax.persistence.*;
@@ -14,10 +15,11 @@ import java.util.List;
  * @version 1.0.0
  */
 @Entity
-public class Group {
+public class UserGroup {
     @Id
-    @GeneratedValue
-    private Long Id;
+    @GeneratedValue(generator = "myIdStrategy")
+    @GenericGenerator(name = "myIdStrategy", strategy = "site.zido.jianliao.common.TimeId")
+    private Long id;
     private String name = "我的好友"; //姓名
     @ManyToOne
     @NoInjectValue
@@ -30,7 +32,7 @@ public class Group {
         return name;
     }
 
-    public Group setName(String name) {
+    public UserGroup setName(String name) {
         this.name = name;
         return this;
     }
@@ -39,7 +41,7 @@ public class Group {
         return originUser;
     }
 
-    public Group setOriginUser(SysUser originUser) {
+    public UserGroup setOriginUser(SysUser originUser) {
         this.originUser = originUser;
         return this;
     }
@@ -48,17 +50,17 @@ public class Group {
         return users;
     }
 
-    public Group setUsers(List<SysUser> users) {
+    public UserGroup setUsers(List<SysUser> users) {
         this.users = users;
         return this;
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
-    public Group setId(Long id) {
-        Id = id;
+    public UserGroup setId(Long id) {
+        this.id = id;
         return this;
     }
 }

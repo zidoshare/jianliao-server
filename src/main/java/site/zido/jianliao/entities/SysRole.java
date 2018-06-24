@@ -1,5 +1,7 @@
 package site.zido.jianliao.entities;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +18,8 @@ import javax.persistence.Id;
 @Entity
 public class SysRole {
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "myIdStrategy")
+    @GenericGenerator(name = "myIdStrategy", strategy = "site.zido.jianliao.common.TimeId")
     private Long id;
     @Column(nullable = false,length = 10)
     private String name;
